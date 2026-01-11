@@ -6,6 +6,8 @@ import { AppError } from '../middlewares/error.middleware';
  */
 export class BadRequestError extends AppError {
   constructor(message: string = 'Bad request') {
-    super(message, 400);
+    super(message, 400); // set statusCode 404
+    this.name = 'BadRequestError';
+    Object.setPrototypeOf(this, BadRequestError.prototype); // fix instanceof
   }
 }
