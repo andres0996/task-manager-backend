@@ -7,6 +7,6 @@ const controller = new UserController();
 /**
  * User routes
  */
-router.post('/users', (req, res) => controller.createUser(req, res));
+router.post('/', (req, res) => controller.createUser(req, res));
 
 export default router;
