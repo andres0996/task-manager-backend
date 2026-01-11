@@ -25,7 +25,7 @@ export class UserController {
    */
   async createUser(req: Request, res: Response): Promise<void> {
     try {
-      const { email } = req.body;
+      const { email } = req.body || {};
 
       if (!email) {
         throw new BadRequestError('Email is required');
