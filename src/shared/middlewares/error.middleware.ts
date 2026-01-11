@@ -12,7 +12,10 @@ export class AppError extends Error {
     this.statusCode = statusCode;
 
     // Fix the prototype chain for proper instanceof checks
-    Object.setPrototypeOf(this, AppError.prototype);
+    Object.setPrototypeOf(this, new.target.prototype);
+
+    // Set the error name to the class name
+    this.name = this.constructor.name;
   }
 }
 
