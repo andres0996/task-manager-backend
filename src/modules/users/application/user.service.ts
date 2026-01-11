@@ -31,4 +31,23 @@ export class UserService {
 
     return user;
   }
+
+  /**
+   * Finds an existing user by email.
+   *
+   * @param email - Email address of the user to find
+   * @returns The existing User instance
+   * @throws BadRequestError if user with given email does not exist
+   */
+  async findUser(email: string): Promise<User> {
+    // Look up the user in the repository
+    const existingUser = await this.repository.findByEmail(email);
+
+    // Throw an error if user does not exist
+    if (!existingUser) {
+      throw new BadRequestError('Email does not exist');
+    }
+
+    return existingUser;
+  }
 }

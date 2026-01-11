@@ -26,30 +26,64 @@ describe('UserService', () => {
     jest.clearAllMocks();
   });
 
-  // Should create a new user if email does not exist
-  it('should create a new user if email does not exist', async () => {
-    const email = 'newuser@example.com';
-    repositoryMock.findByEmail.mockResolvedValue(null);
+  // Group tests for createUser
+  describe('createUser', () => {
+    // Should create a new user if email does not exist
+    it('should create a new user if email does not exist', async () => {
+      const email = 'newuser@example.com';
+      repositoryMock.findByEmail.mockResolvedValue(null);
 
-    await service.createUser(email);
+      await service.createUser(email);
 
-    // Verify repository methods were called correctly
-    expect(repositoryMock.findByEmail).toHaveBeenCalledWith(email);
-    expect(repositoryMock.create).toHaveBeenCalled();
-  });
+      // Verify repository methods were called correctly
+      expect(repositoryMock.findByEmail).toHaveBeenCalledWith(email);
+      expect(repositoryMock.create).toHaveBeenCalled();
+    });
 
-  // Should throw BadRequestError with a descriptive message if email already exists
-  it('should throw BadRequestError with message "The email is already in use" if email already exists', async () => {
-    const existingEmail = 'existing@example.com';
-    const existingUser = new User(existingEmail);
-    repositoryMock.findByEmail.mockResolvedValue(existingUser);
+    // Should throw BadRequestError with a descriptive message if email already exists
+    it('should throw BadRequestError with message "The email is already in use" if email already exists', async () => {
+      const existingEmail = 'existing@example.com';
+      const existingUser = new User(existingEmail);
+      repositoryMock.findByEmail.mockResolvedValue(existingUser);
 
-    await expect(service.createUser(existingEmail)).rejects.toThrow(
-      `Email is already in use`
-    );
+      await expect(service.createUser(existingEmail)).rejects.toThrow(
+        `Email is already in use`
+      );
 
-    // Verify repository methods were called correctly
-    expect(repositoryMock.findByEmail).toHaveBeenCalledWith(existingEmail);
-    expect(repositoryMock.create).not.toHaveBeenCalled();
-  });
+      // Verify repository methods were called correctly
+      expect(repositoryMock.findByEmail).toHaveBeenCalledWith(existingEmail);
+      expect(repositoryMock.create).not.toHaveBeenCalled();
+    });
+  })
+
+  // Group tests for findUser
+  describe('findUser', () => {
+    // Should return an existing user if the email exists
+    it('should return an existing user if the email exists', async () => {
+      const existingEmail = 'existing@example.com';
+      const existingUser = new User(existingEmail);
+      repositoryMock.findByEmail.mockResolvedValue(existingUser);
+
+      const result = await service.findUser(existingEmail);
+
+      // Verify repository method was called correctly
+      expect(repositoryMock.findByEmail).toHaveBeenCalledWith(existingEmail);
+
+      // Verify that the returned user matches the mock
+      expect(result).toBe(existingUser);
+    });
+
+    // Should throw BadRequestError if the email does not exist
+    it('should throw BadRequestError with message "Email does not exist" if email does not exist', async () => {
+      const email = 'nonexistent@example.com';
+      repositoryMock.findByEmail.mockResolvedValue(null);
+
+      await expect(service.findUser(email)).rejects.toThrow('Email does not exist');
+
+      // Verify repository method was called correctly
+      expect(repositoryMock.findByEmail).toHaveBeenCalledWith(email);
+    });
+  })
+
+
 });

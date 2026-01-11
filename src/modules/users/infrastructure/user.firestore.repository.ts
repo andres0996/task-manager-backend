@@ -38,4 +38,5 @@ export class UserFirestoreRepository implements IUserRepository {
       createdAt: user.createdAt,
     });
   }
+
 }
