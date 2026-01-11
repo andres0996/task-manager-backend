@@ -9,7 +9,7 @@ describe('User Routes', () => {
 
   // Positive case: should create a new user successfully
   it('POST /api/v1/users - should create a user', async () => {
-    const email = 'test@example.com';
+    const email = `test${Date.now()}@example.com`;
 
     // Make POST request to create user
     const response = await request(app)
