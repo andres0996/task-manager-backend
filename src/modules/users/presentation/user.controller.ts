@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserService } from '../application/user.service';
 import { UserFirestoreRepository } from '../infrastructure/user.firestore.repository';
 import { BadRequestError } from '../../../shared/errors/bad-request.error';
+import { AppError } from '../../../shared/middlewares/error.middleware';
 
 /**
  * Controller for User endpoints.
@@ -37,9 +38,13 @@ export class UserController {
         data: { email: user.email, createdAt: user.createdAt },
       });
     } catch (err: any) {
-      res.status(err.status || 500).json({
-        message: err.message || 'Internal server error',
-      });
+      if (err instanceof AppError) {
+        // Use statusCode from AppError subclasses
+        res.status(err.statusCode).json({ message: err.message });
+      } else {
+        // Any other unexpected error
+        res.status(500).json({ message: err.message || 'Internal server error' });
+      }
     }
   }
 }
