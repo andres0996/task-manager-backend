@@ -19,6 +19,12 @@ function getEnv(name: string, required = true): string | undefined {
 }
 
 /**
+ * Current application environment.
+ * Typical values: 'development', 'test', 'production'.
+ */
+export const NODE_ENV = getEnv('NODE_ENV');
+
+/**
  * Firebase project ID from Google service account
  */
 export const FIREBASE_PROJECT_ID = getEnv('FIREBASE_PROJECT_ID');
