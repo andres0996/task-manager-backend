@@ -1,8 +1,7 @@
 /**
- * Data Transfer Objects (DTOs) for User entity.
- * Defines the structure of user data exchanged between layers.
+ * DTO for user response
  */
-
-export interface CreateUserDTO {
+export interface UserResponseDTO {
   email: string;
+  createdAt: Date;
 }
