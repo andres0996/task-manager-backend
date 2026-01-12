@@ -11,5 +11,6 @@ const controller = new TaskController();
 // POST /tasks → create a new task
 router.post('/', (req, res) => controller.createTask(req, res));
 router.get('/:id', (req, res) => controller.findById(req, res));
+router.delete('/:id', (req, res) => controller.deleteTask(req, res));
 
 export default router;

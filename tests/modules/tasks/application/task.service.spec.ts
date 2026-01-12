@@ -84,5 +84,25 @@ describe('TaskService', () => {
       repositoryMock.findById.mockResolvedValue(null);
       await expect(service.findById('task-id-123')).rejects.toThrow('Task not found');
     });
-  })
+  });
+
+  describe('deleteTask', () => {
+    it('should delete a task successfully', async () => {
+      const task = new Task({ userEmail: 'test@example.com', title: 'Task 1' });
+      repositoryMock.findById.mockResolvedValue(task);
+      repositoryMock.delete.mockResolvedValue();
+  
+      await service.deleteTask('task-id-abc');
+  
+      expect(repositoryMock.delete).toHaveBeenCalledWith('task-id-abc');
+    });
+  
+    it('should throw BadRequestError if task not found', async () => {
+      repositoryMock.findById.mockResolvedValue(null);
+  
+      await expect(service.deleteTask('nonexistent-id'))
+        .rejects
+        .toThrow('Task not found');
+    });
+  });
 });

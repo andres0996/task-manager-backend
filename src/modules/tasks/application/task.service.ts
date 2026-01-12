@@ -37,4 +37,18 @@ export class TaskService {
   
     return task;
   }
+
+  /**
+  * Deletes a task by ID
+  * @param id - Task ID
+  * @throws BadRequestError if task not found
+  */
+  async deleteTask(id: string): Promise<void> {
+    const task = await this.repository.findById(id);
+
+    if (!task) throw new AppError('Task not found', 404);
+
+    await this.repository.delete(id);
+  }
+  
 }

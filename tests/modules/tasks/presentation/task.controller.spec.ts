@@ -32,7 +32,8 @@ describe('TaskController', () => {
     app = express();
     app.use(express.json());
     app.post('/api/v1/tasks', (req, res) => controller.createTask(req, res));
-    app.get('/api/v1/tasks/:id', (req, res) => controller.findById(req, res)); // ruta para findById
+    app.get('/api/v1/tasks/:id', (req, res) => controller.findById(req, res));
+    app.delete('/api/v1/tasks/:id', (req, res) => controller.deleteTask(req, res));
   });
 
   afterEach(() => {
@@ -107,6 +108,27 @@ describe('TaskController', () => {
       const response = await request(app).get('/api/v1/tasks/');
       expect(response.status).toBe(404);
     });
-  })
+  });
+
+  describe('deleteTask', () => {
+    it('should delete a task successfully', async () => {
+      taskServiceMock.deleteTask.mockResolvedValue();
+  
+      const response = await request(app).delete('/api/v1/tasks/task-id-abc');
+  
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Task deleted successfully');
+      expect(taskServiceMock.deleteTask).toHaveBeenCalledWith('task-id-abc');
+    });
+  
+    it('should return 404 if task not found', async () => {
+      taskServiceMock.deleteTask.mockRejectedValue(new NotFoundError('Task not found'));
+  
+      const response = await request(app).delete('/api/v1/tasks/nonexistent-id');
+  
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe('Task not found');
+    });
+  });
 
 });

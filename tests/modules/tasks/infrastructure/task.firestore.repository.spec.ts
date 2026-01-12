@@ -91,4 +91,23 @@ describe('TaskFirestoreRepository', () => {
     });
   })
 
+  // Group tests for delete
+  describe('delete', () => {
+    it('should call doc(id).delete() when deleting a task', async () => {
+      const collectionInstance = (db.collection as jest.Mock).mock.results[0].value;
+
+      // Mock doc(id).delete
+      const deleteMock = jest.fn().mockResolvedValue(undefined);
+      (collectionInstance.doc as jest.Mock).mockReturnValue({
+        delete: deleteMock,
+      });
+
+      await repository.delete('task-id-abc');
+
+      // Verificamos que se haya llamado correctamente con el ID
+      expect(collectionInstance.doc).toHaveBeenCalledWith('task-id-abc');
+      expect(deleteMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
 });

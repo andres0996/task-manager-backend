@@ -57,7 +57,7 @@ export class TaskFirestoreRepository implements ITaskRepository {
    * @param id - The ID of the task to delete
    */
   async delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.collection.doc(id).delete();
   }
 
   /**

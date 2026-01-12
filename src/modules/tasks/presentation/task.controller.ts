@@ -87,4 +87,26 @@ export class TaskController {
       }
     }
   }
+
+  /**
+   * Handles delete a task.
+   * DELETE /tasks/:id
+   */
+  async deleteTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id as string;
+  
+      if (!id) throw new AppError('Task ID is required', 400);
+  
+      await this.service.deleteTask(id);
+  
+      res.status(200).json({ message: 'Task deleted successfully' });
+    } catch (err: any) {
+      if (err instanceof AppError) {
+        res.status(err.statusCode).json({ message: err.message });
+      } else {
+        res.status(500).json({ message: err.message || 'Internal server error' });
+      }
+    }
+  }
 }
