@@ -27,7 +27,21 @@ export class TaskFirestoreRepository implements ITaskRepository {
    * @returns A Task object if found, or null
    */
   async findById(id: string): Promise<Task | null> {
-    throw new Error('Method not implemented.');
+    const doc = await this.collection.doc(id).get();
+    
+    if (!doc.exists) return null;
+  
+    const data = doc.data();
+    
+    if (!data) return null
+    
+    return new Task({
+      userEmail: data.userEmail,
+      title: data.title,
+      description: data.description ?? '',
+      completed: data.completed ?? false,
+      completedAt: data.completedAt ?? null,
+    });
   }
 
   /**

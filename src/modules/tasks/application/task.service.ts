@@ -1,6 +1,7 @@
 import { Task } from '../domain/task.entity';
 import { ITaskRepository } from '../domain/task.repository.interface';
 import { BadRequestError } from '../../../shared/errors/bad-request.error';
+import { AppError } from '../../../shared/middlewares/error.middleware';
 import { UserService } from '../../users/application/user.service';
 import { UserFirestoreRepository } from '../../users/infrastructure/user.firestore.repository';
 
@@ -21,11 +22,19 @@ export class TaskService {
 
     // Verify that the user exists
     const user = await this.userService.findUser(userEmail);
-    if (!user) throw new BadRequestError('User does not exist');
+    if (!user) throw new AppError('User does not exist', 404);
 
     const task = new Task({ title, userEmail, description });
     await this.repository.create(task);
 
+    return task;
+  }
+
+  async findById(id: string): Promise<Task> {
+    const task = await this.repository.findById(id);
+  
+    if (!task) throw new AppError('Task not found', 404);
+  
     return task;
   }
 }

@@ -10,5 +10,6 @@ const controller = new TaskController();
 
 // POST /tasks → create a new task
 router.post('/', (req, res) => controller.createTask(req, res));
+router.get('/:id', (req, res) => controller.findById(req, res));
 
 export default router;

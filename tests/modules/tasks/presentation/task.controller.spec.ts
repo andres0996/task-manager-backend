@@ -20,12 +20,19 @@ describe('TaskController', () => {
    * The controller is injected with the mocked service.
    */
   beforeEach(() => {
-    taskServiceMock = { createTask: jest.fn() } as unknown as jest.Mocked<TaskService>;
-    controller = new TaskController(taskServiceMock);
-
+    taskServiceMock = {
+      createTask: jest.fn(),
+      findById: jest.fn(),
+      updateTask: jest.fn(),
+      deleteTask: jest.fn(),
+    } as unknown as jest.Mocked<TaskService>;
+  
+    const controller = new TaskController(taskServiceMock);
+  
     app = express();
     app.use(express.json());
     app.post('/api/v1/tasks', (req, res) => controller.createTask(req, res));
+    app.get('/api/v1/tasks/:id', (req, res) => controller.findById(req, res)); // ruta para findById
   });
 
   afterEach(() => {
@@ -44,7 +51,6 @@ describe('TaskController', () => {
       expect(response.status).toBe(201);
       expect(response.body.data.title).toBe(payload.title);
     
-      // Aquí está la corrección: pasar los argumentos separados
       expect(taskServiceMock.createTask).toHaveBeenCalledWith(
         payload.userEmail,
         payload.title,
@@ -55,7 +61,7 @@ describe('TaskController', () => {
     it('should return 400 if title is missing', async () => {
       taskServiceMock.createTask.mockRejectedValue(new BadRequestError('Task title is required'));
 
-      const response = await request(app).post('/api/v1/tasks').send({ userEmail: 'user@example.com' });
+      const response = await request(app).post('/api/v1/tasks').send({ userEmail: 'test@example.com' });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe('title is required');
@@ -72,17 +78,35 @@ describe('TaskController', () => {
       expect(taskServiceMock.createTask).not.toHaveBeenCalled();
     });
 
-  it('should return 404 if user does not exist', async () => {
-    const payload = { userEmail: 'nonexistent@example.com', title: 'Task for missing user' };
+    it('should return 404 if user does not exist', async () => {
+      const payload = { userEmail: 'nonexistent@example.com', title: 'Task for missing user' };
 
-    // Mock the service to throw NotFoundError
-    taskServiceMock.createTask.mockRejectedValue(new NotFoundError('User not found'));
+      taskServiceMock.createTask.mockRejectedValue(new NotFoundError('User not found'));
 
-    const response = await request(app).post('/api/v1/tasks').send(payload);
+      const response = await request(app).post('/api/v1/tasks').send(payload);
 
-    expect(response.status).toBe(404);
-    expect(response.body.message).toBe('User not found');
-    expect(taskServiceMock.createTask).toHaveBeenCalledWith(payload.userEmail, payload.title, undefined);
+      expect(response.status).toBe(404);
+      expect(response.body.message).toBe('User not found');
+      expect(taskServiceMock.createTask).toHaveBeenCalledWith(payload.userEmail, payload.title, undefined);
+    });
   });
-  });
+
+  describe('findTask', () => {
+    it('should return 200 and task data when task exists', async () => {
+      const task = new Task({ userEmail: 'test@example.com', title: 'Task 1' });
+      taskServiceMock.findById.mockResolvedValue(task);
+    
+      const response = await request(app).get('/api/v1/tasks/task-id-abc');
+    
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Task retrieved successfully');
+      expect(response.body.data.title).toBe(task.title);
+    });
+    
+    it('should return 404 if task ID is missing', async () => {
+      const response = await request(app).get('/api/v1/tasks/');
+      expect(response.status).toBe(404);
+    });
+  })
+
 });

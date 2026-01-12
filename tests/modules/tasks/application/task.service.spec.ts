@@ -69,4 +69,20 @@ describe('TaskService', () => {
       expect(repositoryMock.create).not.toHaveBeenCalled();
     });
   });
+
+
+  describe('findTask', () => {
+    it('should return a task when found', async () => {
+      const task = new Task({ userEmail: 'test@example.com', title: 'Task 1' });
+      repositoryMock.findById.mockResolvedValue(task);
+    
+      const result = await service.findById('task-id-123');
+      expect(result).toBe(task);
+    });
+    
+    it('should throw error if task not found', async () => {
+      repositoryMock.findById.mockResolvedValue(null);
+      await expect(service.findById('task-id-123')).rejects.toThrow('Task not found');
+    });
+  })
 });

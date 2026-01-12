@@ -62,4 +62,29 @@ export class TaskController {
       }
     }
   }
+
+  /**
+   * Handles get a task.
+   * GET /tasks/:id
+   */
+  async findById(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id as string;
+  
+      if (!id) throw new AppError('Task ID is required', 400);
+  
+      const task = await this.service.findById(id);
+
+      res.status(200).json({
+        message: 'Task retrieved successfully',
+        data: task,
+      });
+    } catch (err: any) {
+      if (err instanceof AppError) {
+        res.status(err.statusCode).json({ message: err.message });
+      } else {
+        res.status(500).json({ message: err.message || 'Internal server error' });
+      }
+    }
+  }
 }

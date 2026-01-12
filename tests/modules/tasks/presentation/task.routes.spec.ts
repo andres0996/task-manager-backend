@@ -34,7 +34,6 @@ describe('TaskController Routes', () => {
   });
 
   afterEach(() => {
-    // Clear all mocks between tests
     jest.clearAllMocks();
   });
 
@@ -69,7 +68,7 @@ describe('TaskController Routes', () => {
      * - Verifies that createTask method of the service was NOT called
      */
     it('should return 400 if title is missing', async () => {
-      const payload = { userEmail: 'user@example.com', description : '' };
+      const payload = { userEmail: 'test@example.com', description : '' };
     
       const response = await request(app).post('/api/v1/tasks').send(payload);
     
