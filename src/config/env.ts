@@ -18,9 +18,6 @@ function getEnv(name: string, required = true): string | undefined {
   return value;
 }
 
-
-
-
 /**
  * Current application environment.
  * Typical values: 'development', 'test', 'production'.
@@ -48,7 +45,7 @@ export const FIREBASE_PRIVATE_KEY = getEnv('FIREBASE_PRIVATE_KEY');
 export const PORT = getEnv('PORT', false) || '3000';
 
 /**
- * Port token JWT
+ * Token JWT
  */
 export const JWT_SECRET = getEnv('JWT_SECRET', false);
 
