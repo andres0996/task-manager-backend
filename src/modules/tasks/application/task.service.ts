@@ -50,5 +50,24 @@ export class TaskService {
 
     await this.repository.delete(id);
   }
+
+  /**
+  * Updates a task by ID
+  * @param id - Task ID
+  * @throws BadRequestError if task not found
+  */
+  async updateTask(id: string, title?: string, description?: string, completed?: boolean): Promise<Task> {
+    const task = await this.repository.findById(id);
+    if (!task) throw new AppError('Task not found', 404);
+  
+    if (title !== undefined) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (completed !== undefined) {
+      task.completed = completed;
+      task.completedAt = completed ? new Date() : null;
+    }
+  
+    return await this.repository.update(task);
+  }
   
 }

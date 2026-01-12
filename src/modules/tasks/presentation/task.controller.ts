@@ -109,4 +109,30 @@ export class TaskController {
       }
     }
   }
+
+  /**
+   * Handles update a task.
+   * UPDATE /tasks/:id
+   */
+  async updateTask(req: Request, res: Response): Promise<void> {
+    try {
+      const id  = req.params.id as string;
+      const { title, description, completed } = req.body;
+  
+      if (!id) throw new AppError('Task ID is required', 400);
+  
+      const updatedTask = await this.service.updateTask(id, title, description, completed);
+  
+      res.status(200).json({
+        message: 'Task updated successfully',
+        data: updatedTask,
+      });
+    } catch (err: any) {
+      if (err instanceof AppError) {
+        res.status(err.statusCode).json({ message: err.message });
+      } else {
+        res.status(500).json({ message: err.message || 'Internal server error' });
+      }
+    }
+  }
 }

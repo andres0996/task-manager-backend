@@ -8,9 +8,11 @@ import { db } from '../../../../src/config/firebase';
  */
 jest.mock('../../../../src/config/firebase', () => {
   const addMock = jest.fn();
-  const getMock = jest.fn();
-  const docMock = jest.fn(() => ({ get: getMock }));
-
+  const docMock = jest.fn(() => ({
+    get: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  }));
   return {
     db: {
       collection: jest.fn(() => ({
@@ -110,4 +112,32 @@ describe('TaskFirestoreRepository', () => {
     });
   });
 
+  // Group tests for update
+  describe('update', () => {
+    it('should call update on the correct doc', async () => {
+      const collectionInstance = (db.collection as jest.Mock).mock.results[0].value;
+
+      const task = new Task({
+        title: 'Old Task',
+        userEmail: 'test@example.com',
+        description: 'Old description',
+        completed: false,
+      });
+
+      const updateMock = jest.fn();
+      (collectionInstance.doc as jest.Mock).mockReturnValue({
+        update: updateMock,
+      });
+
+      await repository.update(task);
+
+      expect(updateMock).toHaveBeenCalledTimes(1);
+      expect(updateMock).toHaveBeenCalledWith({
+        title: task.title,
+        description: task.description,
+        completed: task.completed,
+        completedAt: null,
+      });
+    });
+  });
 });

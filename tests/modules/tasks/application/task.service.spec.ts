@@ -26,7 +26,6 @@ describe('TaskService', () => {
       findUser: jest.fn(),
     } as unknown as jest.Mocked<UserService>;
 
-    // Inject both repository and userService into TaskService
     service = new TaskService(repositoryMock, userServiceMock);
   });
 
@@ -70,7 +69,6 @@ describe('TaskService', () => {
     });
   });
 
-
   describe('findTask', () => {
     it('should return a task when found', async () => {
       const task = new Task({ userEmail: 'test@example.com', title: 'Task 1' });
@@ -104,5 +102,108 @@ describe('TaskService', () => {
         .rejects
         .toThrow('Task not found');
     });
+  });
+
+  describe('updateTask', () => {
+    it('should update a task successfully', async () => {
+      const existingTask = new Task({
+        userEmail: 'test@example.com',
+        title: 'Old Task',
+        description: 'Old description',
+        completed: false,
+      });
+      existingTask.id = 'task-id-abc';
+  
+      repositoryMock.findById.mockResolvedValue(existingTask);
+      repositoryMock.update.mockResolvedValue({
+        ...existingTask,
+        title: 'Updated Task',
+        completed: true,
+      });
+  
+      const updatedTask = await service.updateTask(
+        existingTask.id!,
+        'Updated Task',
+        undefined,
+        true
+      );
+  
+      expect(repositoryMock.findById).toHaveBeenCalledWith(existingTask.id);
+  
+      expect(updatedTask.userEmail).toBe(existingTask.userEmail);
+    });
+  
+    it('should throw BadRequestError if task does not exist', async () => {
+      repositoryMock.findById.mockResolvedValue(null);
+  
+      await expect(
+        service.updateTask('nonexistent-id', 'Title', 'Desc', true)
+      ).rejects.toThrow('Task not found');
+  
+      expect(repositoryMock.update).not.toHaveBeenCalled();
+    });
+  
+    it('should set completedAt when marking completed', async () => {
+      const task = new Task({
+        userEmail: 'test@example.com',
+        title: 'Task',
+        description: '',
+        completed: true,
+      });
+      task.id = 'task-id-123';
+  
+      repositoryMock.findById.mockResolvedValue(task);
+      repositoryMock.update.mockResolvedValue({
+        ...task,
+        completed: true,
+        completedAt: new Date(),
+      });
+  
+      const updated = await service.updateTask(task.id!, undefined, undefined, true);
+  
+      expect(updated.completed).toBe(true);
+      expect(updated.completedAt).toBeInstanceOf(Date);
+    });
+
+    it('should set completedAt null when marking false', async () => {
+      const task = new Task({
+        userEmail: 'test@example.com',
+        title: 'Task',
+        description: '',
+        completed: false,
+      });
+      task.id = 'task-id-123';
+  
+      repositoryMock.findById.mockResolvedValue(task);
+      repositoryMock.update.mockResolvedValue({
+        ...task,
+        completed: false,
+        completedAt: null,
+      });
+  
+      const updated = await service.updateTask(task.id!, undefined, undefined, false);
+  
+      expect(updated.completed).toBe(false);
+    });
+
+    it('should not change completedAt if completed is undefined', async () => {
+      const task = new Task({
+        userEmail: 'test@example.com',
+        title: 'Task',
+        description: '',
+      });
+      task.id = 'task-id-123';
+  
+      repositoryMock.findById.mockResolvedValue(task);
+      repositoryMock.update.mockResolvedValue({
+        ...task,
+      });
+  
+      const updated = await service.updateTask(task.id!);
+  
+      expect(updated.userEmail).toBe(task.userEmail);
+    });
+
+
   });
 });

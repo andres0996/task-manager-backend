@@ -31,7 +31,7 @@ export interface ITaskRepository {
    * @param task - Task entity with updated data
    * @returns Promise resolving when the update is completed
    */
-  update(task: Task): Promise<void>;
+  update(task: Task): Promise<Task>;
 
   /**
    * Delete a task by its ID.

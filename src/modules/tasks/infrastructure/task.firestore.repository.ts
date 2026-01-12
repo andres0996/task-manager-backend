@@ -48,8 +48,16 @@ export class TaskFirestoreRepository implements ITaskRepository {
    * Updates an existing task in the collection.
    * @param task - The Task object with updated fields
    */
-  async update(task: Task): Promise<void> {
-    throw new Error('Method not implemented.');
+  async update(task: Task): Promise<Task> {
+
+    await this.collection.doc(task.id!).update({
+      title: task.title,
+      description: task.description,
+      completed: task.completed,
+      completedAt: task.completed ? new Date() : null,
+    });
+    
+    return task;
   }
 
   /**
