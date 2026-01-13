@@ -1,3 +1,9 @@
+/**
+ * AuthService
+ *
+ * Handles all authentication-related business logic.
+ */
+
 import { UserFirestoreRepository } from '../../users/infrastructure/user.firestore.repository';
 import { AppError } from '../../../shared/middlewares/error.middleware';
 import { generateToken } from '../../../shared/utils/jwt.service';
@@ -11,10 +17,11 @@ export class AuthService {
 
   /**
    * Log in user by email.
-   * Generate a token JWT if exist users.
+   * Generate a JWT token if the user exists.
    *
-   * @param userEmail - email user
+   * @param userEmail - Email of the user
    * @returns JWT string
+   * @throws AppError if userEmail is missing or user does not exist
    */
   async login(userEmail: string): Promise<string> {
     if (!userEmail) {
