@@ -4,9 +4,10 @@
 
 /**
  * DTO for user response
- * Required fields: email, createdAt
+ * Required fields: email
+ * Optional fields: createdAt
  */
 export interface UserResponseDTO {
   email: string;
-  createdAt: Date;
+  createdAt?: Date;
 }

@@ -10,6 +10,7 @@ import { Request, Response } from 'express';
 import { TaskService } from '../application/task.service';
 import { TaskFirestoreRepository } from '../infrastructure/task.firestore.repository';
 import { AppError } from '../../../shared/middlewares/error.middleware';
+import { CreateTaskDTO,TaskResponseDTO,UpdateTaskDTO } from '../../../shared/dtos/task.dto';
 
 export class TaskController {
   private service: TaskService;
@@ -31,12 +32,12 @@ export class TaskController {
    */
   async createTask(req: Request, res: Response): Promise<void> {
     try {
-      const { userEmail, title, description } = req.body || {};
+      const data: CreateTaskDTO = req.body || {};
 
-      if (!userEmail) throw new AppError('userEmail is required', 400);
-      if (!title) throw new AppError('title is required', 400);
+      if (!data.userEmail) throw new AppError('userEmail is required', 400);
+      if (!data.title) throw new AppError('title is required', 400);
 
-      const task = await this.service.createTask(userEmail, title, description);
+      const task = await this.service.createTask(data);
 
       res.status(201).json({
         message: 'Task created successfully',
@@ -108,11 +109,11 @@ export class TaskController {
   async updateTask(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const { title, description, completed } = req.body;
+      const data: UpdateTaskDTO = req.body || {};
 
       if (!id) throw new AppError('Task ID is required', 400);
 
-      const updatedTask = await this.service.updateTask(id as string, title, description, completed);
+      const updatedTask = await this.service.updateTask(id as string, data);
 
       res.status(200).json({
         message: 'Task updated successfully',

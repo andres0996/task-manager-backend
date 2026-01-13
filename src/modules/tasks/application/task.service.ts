@@ -11,6 +11,7 @@ import { BadRequestError } from '../../../shared/errors/bad-request.error';
 import { AppError } from '../../../shared/middlewares/error.middleware';
 import { UserService } from '../../users/application/user.service';
 import { UserFirestoreRepository } from '../../users/infrastructure/user.firestore.repository';
+import { CreateTaskDTO, UpdateTaskDTO } from '../../../shared/dtos/task.dto';
 
 export class TaskService {
   private readonly userService: UserService;
@@ -37,15 +38,14 @@ export class TaskService {
    * @throws BadRequestError if userEmail or title are missing
    * @throws AppError if the user does not exist
    */
-  async createTask(userEmail: string, title: string, description?: string): Promise<Task> {
-    if (!userEmail) throw new BadRequestError('User email is required');
-    if (!title) throw new BadRequestError('Task title is required');
+  async createTask(data: CreateTaskDTO): Promise<Task> {
+    if (!data.userEmail) throw new BadRequestError('User email is required');
+    if (!data.title) throw new BadRequestError('Task title is required');
 
-    // Verify that the user exists
-    const user = await this.userService.findUser(userEmail);
+    const user = await this.userService.findUser(data.userEmail);
     if (!user) throw new AppError('User does not exist', 404);
 
-    const task = new Task({ title, userEmail, description });
+    const task = new Task(data);
     await this.repository.create(task);
 
     return task;
@@ -88,18 +88,16 @@ export class TaskService {
    */
   async updateTask(
     id: string,
-    title?: string,
-    description?: string,
-    completed?: boolean
+    data: UpdateTaskDTO
   ): Promise<Task> {
     const task = await this.repository.findById(id);
     if (!task) throw new AppError('Task not found', 404);
 
-    if (title !== undefined) task.title = title;
-    if (description !== undefined) task.description = description;
-    if (completed !== undefined) {
-      task.completed = completed;
-      task.completedAt = completed ? new Date() : null;
+    if (data.title !== undefined) task.title = data.title;
+    if (data.description !== undefined) task.description = data.description;
+    if (data.completed !== undefined) {
+      task.completed = data.completed;
+      task.completedAt = data.completed ? new Date() : null;
     }
 
     return await this.repository.update(task);
