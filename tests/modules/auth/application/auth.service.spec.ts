@@ -6,6 +6,10 @@ import { generateToken } from '../../../../src/shared/utils/jwt.service';
 jest.mock('../../../../src/modules/users/infrastructure/user.firestore.repository');
 jest.mock('../../../../src/shared/utils/jwt.service');
 
+/**
+ * Unit tests for `AuthService`.
+ *
+ */
 describe('AuthService', () => {
   let authService: AuthService;
   let userRepositoryMock: jest.Mocked<UserFirestoreRepository>;
@@ -21,6 +25,9 @@ describe('AuthService', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Should return a token if the user exists
+   */
   it('should return a token if user exists', async () => {
     const email = 'test@example.com';
     const mockUser = { userEmail: email };
@@ -35,17 +42,29 @@ describe('AuthService', () => {
     expect(generateToken).toHaveBeenCalledWith(email);
   });
 
+  /**
+   * Should throw 400 if userEmail is missing
+   */
   it('should throw 400 if userEmail is missing', async () => {
     await expect(authService.login('')).rejects.toThrow(AppError);
-    await expect(authService.login('')).rejects.toMatchObject({ message: 'userEmail is required', statusCode: 400 });
+    await expect(authService.login('')).rejects.toMatchObject({
+      message: 'userEmail is required',
+      statusCode: 400,
+    });
   });
 
+  /**
+   * Should throw 404 if user does not exist
+   */
   it('should throw 404 if user does not exist', async () => {
     const email = 'notfound@example.com';
     userRepositoryMock.findByEmail.mockResolvedValue(null);
 
     await expect(authService.login(email)).rejects.toThrow(AppError);
-    await expect(authService.login(email)).rejects.toMatchObject({ message: 'User not found', statusCode: 404 });
+    await expect(authService.login(email)).rejects.toMatchObject({
+      message: 'User not found',
+      statusCode: 404,
+    });
     expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(email);
   });
 });
