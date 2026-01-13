@@ -1,18 +1,26 @@
+/**
+ * UserService
+ *
+ * Application service for the User entity.
+ *
+ */
+
 import { IUserRepository } from '../domain/user.repository.interface';
 import { User } from '../domain/user.entity';
 import { BadRequestError } from '../../../shared/errors/bad-request.error';
 
-/**
- * Application service for User entity.
- * Handles use cases and business logic related to users.
- */
 export class UserService {
+  /**
+   * Creates an instance of UserService.
+   *
+   * @param repository - An implementation of IUserRepository for persistence operations
+   */
   constructor(private readonly repository: IUserRepository) {}
 
   /**
    * Creates a new user if the email does not exist.
    *
-   * @param email - Email address for the new user
+   * @param email - Email for the new user
    * @returns The created User instance
    * @throws BadRequestError if email is already in use
    */
@@ -23,10 +31,8 @@ export class UserService {
       throw new BadRequestError('Email is already in use');
     }
 
-    // Create a new User entity
     const user = new User(email);
 
-    // Persist the new user in the repository
     await this.repository.create(user);
 
     return user;
@@ -35,15 +41,13 @@ export class UserService {
   /**
    * Finds an existing user by email.
    *
-   * @param email - Email address of the user to find
+   * @param email - Email of the user to find
    * @returns The existing User instance
    * @throws BadRequestError if user with given email does not exist
    */
   async findUser(email: string): Promise<User> {
-    // Look up the user in the repository
     const existingUser = await this.repository.findByEmail(email);
 
-    // Throw an error if user does not exist
     if (!existingUser) {
       throw new BadRequestError('Email does not exist');
     }

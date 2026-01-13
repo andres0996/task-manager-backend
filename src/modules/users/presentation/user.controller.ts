@@ -1,28 +1,35 @@
+/**
+ * User Controller
+ *
+ * Handles HTTP requests related to User operations.
+ * Acts as the interface between incoming HTTP requests and the UserService.
+ *
+ */
+
 import { Request, Response } from 'express';
 import { UserService } from '../application/user.service';
 import { UserFirestoreRepository } from '../infrastructure/user.firestore.repository';
 import { BadRequestError } from '../../../shared/errors/bad-request.error';
 import { AppError } from '../../../shared/middlewares/error.middleware';
 
-/**
- * Controller for User endpoints.
- * Handles HTTP requests and responses for user operations.
- */
 export class UserController {
   private service: UserService;
 
   /**
    * Constructs the UserController.
-   * @param service - The UserService instance
+   *
+   * @param service - Optional UserService instance (for testing or dependency injection)
    */
   constructor(service?: UserService) {
-    // If no service is provided, use the real Firestore implementation
+
     this.service = service ?? new UserService(new UserFirestoreRepository());
   }
 
   /**
    * Handles user creation.
-   * POST /users
+   *
+   * @param req - Express request object containing the email in req.body
+   * @param res - Express response object to send the result
    */
   async createUser(req: Request, res: Response): Promise<void> {
     try {
@@ -50,11 +57,13 @@ export class UserController {
 
   /**
    * Handles finding an existing user by email.
-   * GET /users?email=<email>
+   *
+   * @param req - Express request object containing email in query parameters
+   * @param res - Express response object to send the result
    */
   async findUser(req: Request, res: Response): Promise<void> {
     try {
-      // Get email from query parameters
+
       const { email } = req.query;
 
       if (!email || typeof email !== 'string') {
