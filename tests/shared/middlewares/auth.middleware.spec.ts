@@ -17,7 +17,7 @@ describe('authMiddleware', () => {
   const mockNext = jest.fn();
 
   beforeEach(() => {
-
+    process.env.JWT_SECRET = 'test_secret_key';
     jest.clearAllMocks();
   });
 

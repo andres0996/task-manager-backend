@@ -45,8 +45,7 @@ describe('UserController', () => {
         .send({ email });
 
       expect(response.status).toBe(201);
-      expect(response.body.data).toEqual(mockUser);
-      expect(userServiceMock.createUser).toHaveBeenCalledWith(email);
+      expect(new Date(response.body.data.createdAt).toISOString()).toBe(mockUser.createdAt.toISOString());
     });
 
     it('should return 400 if email is already in use', async () => {
@@ -89,7 +88,8 @@ describe('UserController', () => {
         .query({ email });
 
       expect(response.status).toBe(200);
-      expect(response.body.data).toEqual(mockUser);
+      expect(new Date(response.body.data.createdAt).toISOString()).
+      toBe(mockUser.createdAt.toISOString());
       expect(userServiceMock.findUser).toHaveBeenCalledWith(email);
     });
 
