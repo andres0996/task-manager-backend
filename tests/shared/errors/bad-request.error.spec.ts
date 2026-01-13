@@ -2,11 +2,15 @@ import { BadRequestError } from '../../../src/shared/errors/bad-request.error';
 
 /**
  * Unit tests for the `BadRequestError` class.
- * Ensures correct error name, message, and default behavior.
+ * 
+ * Ensures correct error name, message, and prototype behavior.
  */
 describe('BadRequestError', () => {
 
-  // Should create an instance with default message
+  /**
+   * Test case: default message
+   * Expected behavior: creates an instance with default message "Bad request"
+   */
   it('should create an instance with default message', () => {
     const error = new BadRequestError();
     expect(error).toBeInstanceOf(BadRequestError);
@@ -14,13 +18,19 @@ describe('BadRequestError', () => {
     expect(error.message).toBe('Bad request');
   });
 
-  // Should create an instance with custom message
+  /**
+   * Test case: custom message
+   * Expected behavior: creates an instance with the provided custom message
+   */
   it('should create an instance with custom message', () => {
     const error = new BadRequestError('Invalid email format');
     expect(error.message).toBe('Invalid email format');
   });
 
-  // Should maintain proper prototype chain
+  /**
+   * Test case: prototype chain
+   * Expected behavior: instance should be recognized as both BadRequestError and Error
+   */
   it('should have proper prototype chain', () => {
     const error = new BadRequestError();
     expect(error instanceof Error).toBe(true);

@@ -2,21 +2,24 @@ import { isValidEmail } from '../../../src/shared/utils/validate-email';
 
 /**
  * Unit tests for the `isValidEmail` utility function.
+ * 
  * Ensures correct validation of email strings, including:
- *  - Valid emails
- *  - Invalid emails
- *  - Edge cases (empty string)
- *  - Non-string inputs (robustness)
  */
 describe('isValidEmail', () => {
 
-  // Valid emails should return true
+  /**
+   * Test case: valid email
+   * Expected behavior: true
+   */
   it('should return true for a valid email', () => {
     expect(isValidEmail('test@example.com')).toBe(true);
     expect(isValidEmail('user.name+tag+sorting@example.com')).toBe(true);
   });
 
-  // Invalid emails should return false
+  /**
+   * Test case: invalid email
+   * Expected behavior: false
+   */
   it('should return false for an invalid email', () => {
     expect(isValidEmail('plainaddress')).toBe(false);
     expect(isValidEmail('@@example.com')).toBe(false);
@@ -24,12 +27,18 @@ describe('isValidEmail', () => {
     expect(isValidEmail('test@com')).toBe(false);
   });
 
-  // Edge case: empty string
+  /**
+   * Test case: empty string
+   * Expected behavior: false
+   */
   it('should return false for empty string', () => {
     expect(isValidEmail('')).toBe(false);
   });
 
-  // Non-string inputs should be rejected
+  /**
+   * Test case: non-string inputs
+   * Expected behavior: false
+   */
   it('should return false for non-string inputs', () => {
     // @ts-expect-error intentionally passing invalid types to test robustness
     expect(isValidEmail(null)).toBe(false);
