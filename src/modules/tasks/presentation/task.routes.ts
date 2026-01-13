@@ -7,9 +7,19 @@
 
 import { Router } from 'express';
 import { TaskController } from './task.controller';
+import { authMiddleware } from '../../../shared/middlewares/auth.middleware';
+
 
 const router = Router();
 const controller = new TaskController();
+
+/**
+ * Apply authentication middleware to all Task routes.
+ * 
+ * All requests to /tasks endpoints must include a valid JWT in the Authorization header.
+ * This ensures that only authenticated users can create, view, update, or delete tasks.
+ */
+router.use(authMiddleware)
 
 /**
  * Create a new task
