@@ -5,11 +5,12 @@ import { db } from '../../../../src/config/firebase';
 /**
  * Unit tests for UserFirestoreRepository.
  * Ensures correct interaction with Firestore for User entity.
+ * 
  */
 jest.mock('../../../../src/config/firebase', () => {
   return {
     db: {
-      collection: jest.fn(), // will be mocked per test
+      collection: jest.fn(),
     },
   };
 });
@@ -38,8 +39,13 @@ describe('UserFirestoreRepository', () => {
     jest.clearAllMocks();
   });
 
-  // Group tests for create
+  /**
+   * Tests for `create` method
+   */
   describe('create', () => {
+    /**
+     * Should call Firestore `add` with the correct user data
+     */
     it('should call add with correct data when creating a user', async () => {
       const newUser = new User('test@example.com', new Date('2026-01-11T12:00:00Z'));
 
@@ -53,8 +59,13 @@ describe('UserFirestoreRepository', () => {
     });
   });
 
-  // Group tests for findByEmail
+  /**
+   * Tests for `findByEmail` method
+   */
   describe('findByEmail', () => {
+    /**
+     * Should call Firestore `where().get()` and return the correct user if found
+     */
     it('should call collection.where().get() and return the correct user', async () => {
       const email = 'existing@example.com';
       const mockUserData = { email, createdAt: { toDate: () => new Date('2026-01-11T12:00:00Z') } };
@@ -72,6 +83,9 @@ describe('UserFirestoreRepository', () => {
       expect(result?.createdAt).toEqual(mockUserData.createdAt.toDate());
     });
 
+    /**
+     * Should return null if no user is found
+     */
     it('should return null if no user is found', async () => {
       const email = 'notfound@example.com';
 
