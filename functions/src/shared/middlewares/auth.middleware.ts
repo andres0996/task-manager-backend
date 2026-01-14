@@ -7,6 +7,7 @@
  */
 import {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
+import * as functions from "firebase-functions";
 
 /**
  * Payload structure for JWT.
@@ -37,7 +38,9 @@ export const authMiddleware = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    // @ts-ignore
+    const JWT_SECRET = functions.config().jwt.secret;
+    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
     req.userEmail = payload.email;
     next();
     return;

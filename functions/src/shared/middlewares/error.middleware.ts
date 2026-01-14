@@ -40,9 +40,6 @@ export const errorMiddleware = (
   res: Response,
   _next: NextFunction
 ) => {
-  if (process.env.NODE_ENV !== "production") {
-    console.error(err);
-  }
 
   const status = err.statusCode || 500;
   const message = err.message || "Internal Server Error";

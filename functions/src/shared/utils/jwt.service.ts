@@ -6,6 +6,7 @@
  * in 1 hour by default.
  */
 import jwt from "jsonwebtoken";
+import * as functions from "firebase-functions";
 
 /**
  * Generate a JSON Web Token (JWT) using the user's email.
@@ -15,7 +16,9 @@ import jwt from "jsonwebtoken";
  */
 export const generateToken = (userEmail: string): string => {
   const payload = {email: userEmail};
-  const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+  // @ts-ignore
+  const JWT_SECRET = functions.config().jwt.secret;
+  const token = jwt.sign(payload, JWT_SECRET, {
     expiresIn: "1h",
   });
   return token;
@@ -28,5 +31,7 @@ export const generateToken = (userEmail: string): string => {
  * @return The decoded token payload
  */
 export const verifyToken = (token: string) => {
-  return jwt.verify(token, process.env.JWT_SECRET!);
+  // @ts-ignore
+  const JWT_SECRET = functions.config().jwt.secret;
+  return jwt.verify(token, JWT_SECRET);
 };
