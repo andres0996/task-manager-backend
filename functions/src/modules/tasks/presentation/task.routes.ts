@@ -94,7 +94,7 @@ router.get("/:id", (req, res) => controller.findById(req, res));
  *   }
  * ]
  */
-router.get("/user/:email", (req, res) => controller.findAllByUser(req, res));
+router.get("/user/:userEmail", (req, res) => controller.findAllByUser(req, res));
 
 /**
  * Update a task by ID
