@@ -5,9 +5,9 @@
  * Exports a router that can be mounted in the main app.
  */
 
-import { Router } from 'express';
-import { AuthController } from './auth.controller';
-import { AuthService } from '../application/auth.service';
+import {Router} from "express";
+import {AuthController} from "./auth.controller";
+import {AuthService} from "../application/auth.service";
 
 const router = Router();
 
@@ -20,6 +20,6 @@ const authController = new AuthController(authService);
  * @route POST /api/v1/auth/login
  * @access Public
  */
-router.post('/login', (req, res) => authController.login(req, res));
+router.post("/login", (req, res) => authController.login(req, res));
 
 export default router;

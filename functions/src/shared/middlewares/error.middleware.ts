@@ -1,10 +1,10 @@
 /**
  * Global error handling setup.
- * 
+ *
  * Provides a custom AppError class and an Express middleware
  * to catch errors from controllers or services and respond with JSON.
  */
-import { Request, Response, NextFunction } from 'express';
+import {Request, Response, NextFunction} from "express";
 
 /**
  * Base class for application-specific errors.
@@ -28,7 +28,7 @@ export class AppError extends Error {
 
 /**
  * Express middleware to catch errors and return a JSON response.
- * 
+ *
  * @param err - The error object
  * @param req - Express request object
  * @param res - Express response object
@@ -38,14 +38,14 @@ export const errorMiddleware = (
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     console.error(err);
   }
 
   const status = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+  const message = err.message || "Internal Server Error";
 
-  res.status(status).json({ message });
+  res.status(status).json({message});
 };

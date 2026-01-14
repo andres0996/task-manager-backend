@@ -9,7 +9,7 @@
 export interface LoginUserDTO {
     userEmail: string;
   }
-  
+
 /**
  * DTO for Login response
  * Required fields: token

@@ -6,7 +6,7 @@
  *
  */
 
-import { isValidEmail } from '../../../shared/utils/validate-email';
+import {isValidEmail} from "../../../shared/utils/validate-email";
 
 export class User {
   public readonly email: string;
@@ -20,11 +20,10 @@ export class User {
    * @throws Error if email is invalid
    */
   constructor(email: string, createdAt?: Date) {
-
     if (!email || !isValidEmail(email)) {
-      throw new Error('User must have a valid email');
+      throw new Error("User must have a valid email");
     }
-  
+
     this.email = email;
     this.createdAt = createdAt ?? new Date();
   }

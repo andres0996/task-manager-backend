@@ -13,7 +13,7 @@ export interface CreateTaskDTO {
   description?: string;
   completedAt?: Date
 }
-  
+
 /**
  * DTO for update task
  * Optional fields: title, description, completed
@@ -25,10 +25,10 @@ export interface UpdateTaskDTO {
   completed?: boolean;
   completedAt?: Date;
 }
-  
+
 /**
  * DTO for response
- * Required fields: userEmail, title, 
+ * Required fields: userEmail, title,
  * description, completed, createdAt
  * Optional fields: completedAt
  */
@@ -41,4 +41,4 @@ export interface TaskResponseDTO {
   completedAt?: Date | null;
   createdAt: Date;
 }
-  
+

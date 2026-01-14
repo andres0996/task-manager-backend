@@ -6,12 +6,12 @@
  *
  */
 
-import { Task } from './task.entity';
+import {Task} from "./task.entity";
 
 export interface ITaskRepository {
   /**
    * Create a new task.
-   * 
+   *
    * @param task - Task entity to create
    * @returns Promise resolving when the task is saved
    */
@@ -19,7 +19,7 @@ export interface ITaskRepository {
 
   /**
    * Find all tasks for a given user.
-   * 
+   *
    * @param email - Email of the user to retrieve tasks for
    * @returns Promise resolving to an array of Task entities
    */
@@ -27,7 +27,7 @@ export interface ITaskRepository {
 
   /**
    * Find a task by its ID.
-   * 
+   *
    * @param id - Task ID
    * @returns Promise resolving to the Task entity or null if not found
    */
@@ -35,7 +35,7 @@ export interface ITaskRepository {
 
   /**
    * Update an existing task.
-   * 
+   *
    * @param task - Task entity with updated data
    * @returns Promise resolving when the update is completed
    */
@@ -43,7 +43,7 @@ export interface ITaskRepository {
 
   /**
    * Delete a task by its ID.
-   * 
+   *
    * @param id - Task ID
    * @returns Promise resolving when the task is deleted
    */

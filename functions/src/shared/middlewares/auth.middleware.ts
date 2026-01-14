@@ -1,12 +1,12 @@
 /**
  * Authentication middleware for Express.
- * 
+ *
  * Verifies JWT tokens sent in the Authorization header and
  * attaches the user's email to the request object if valid.
  * Denies access with 401 Unauthorized if the token is missing or invalid.
  */
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import {Request, Response, NextFunction} from "express";
+import jwt from "jsonwebtoken";
 
 /**
  * Payload structure for JWT.
@@ -17,24 +17,24 @@ interface JwtPayload {
 
 /**
  * Express middleware to authenticate requests using JWT.
- * 
+ *
  * @param req - Express request object
  * @param res - Express response object
  * @param next - Next middleware function
  */
 export const authMiddleware = (
-  req: Request, 
-  res: Response, 
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    res.status(401).json({ message: 'Token missing' });
+    res.status(401).json({message: "Token missing"});
     return;
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.split(" ")[1];
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
@@ -42,7 +42,7 @@ export const authMiddleware = (
     next();
     return;
   } catch (err) {
-    res.status(401).json({ message: 'Invalid token' });
+    res.status(401).json({message: "Invalid token"});
     return;
   }
 };

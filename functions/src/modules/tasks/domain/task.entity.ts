@@ -8,13 +8,13 @@
  */
 
 export class Task {
-  public id?: string; 
-  public userEmail: string; 
+  public id?: string;
+  public userEmail: string;
   public title: string;
   public description: string;
-  public completed: boolean; 
+  public completed: boolean;
   public completedAt?: Date | null;
-  public createdAt: Date; 
+  public createdAt: Date;
 
   /**
    * Constructs a new Task instance.
@@ -35,7 +35,7 @@ export class Task {
   }) {
     this.userEmail = data.userEmail;
     this.title = data.title;
-    this.description = data.description ?? '';
+    this.description = data.description ?? "";
     this.completed = data.completed ?? false;
     this.completedAt = data.completedAt ?? null;
     this.createdAt = new Date();

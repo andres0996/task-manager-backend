@@ -5,8 +5,8 @@
  *
  */
 
-import { Router } from 'express';
-import { UserController } from './user.controller';
+import {Router} from "express";
+import {UserController} from "./user.controller";
 
 const router = Router();
 const controller = new UserController();
@@ -27,7 +27,7 @@ const controller = new UserController();
  *   "data": { "email": "user@example.com", "createdAt": "2026-01-12T12:34:56.789Z" }
  * }
  */
-router.post('/', (req, res) => controller.createUser(req, res));
+router.post("/", (req, res) => controller.createUser(req, res));
 
 /**
  * Find an existing user by email
@@ -43,6 +43,6 @@ router.post('/', (req, res) => controller.createUser(req, res));
  *   "data": { "email": "user@example.com", "createdAt": "2026-01-12T12:34:56.789Z" }
  * }
  */
-router.get('/email', (req, res) => controller.findUser(req, res));
+router.get("/email", (req, res) => controller.findUser(req, res));
 
 export default router;

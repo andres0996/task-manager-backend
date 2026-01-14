@@ -5,8 +5,8 @@
  * Provides endpoints for login and integrates with AuthService.
  */
 
-import { Request, Response } from 'express';
-import { AuthService } from '../application/auth.service';
+import {Request, Response} from "express";
+import {AuthService} from "../application/auth.service";
 
 export class AuthController {
   private authService: AuthService;
@@ -23,22 +23,22 @@ export class AuthController {
    *
    * @param req - Express Request object, expects { userEmail: string } in body
    * @param res - Express Response object
-   * @returns void
+   * @return void
    */
   async login(req: Request, res: Response): Promise<void> {
     try {
-      const { userEmail } = req.body;
+      const {userEmail} = req.body;
 
       if (!userEmail) {
-        res.status(400).json({ message: 'userEmail is required' });
+        res.status(400).json({message: "userEmail is required"});
         return;
       }
 
       const token = await this.authService.login(userEmail);
 
-      res.status(200).json({ token });
+      res.status(200).json({token});
     } catch (err: any) {
-      res.status(err.statusCode || 500).json({ message: err.message || 'Internal server error' });
+      res.status(err.statusCode || 500).json({message: err.message || "Internal server error"});
     }
   }
 }

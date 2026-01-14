@@ -5,9 +5,9 @@
  *
  */
 
-import { Router } from 'express';
-import { TaskController } from './task.controller';
-import { authMiddleware } from '../../../shared/middlewares/auth.middleware';
+import {Router} from "express";
+import {TaskController} from "./task.controller";
+import {authMiddleware} from "../../../shared/middlewares/auth.middleware";
 
 
 const router = Router();
@@ -15,11 +15,11 @@ const controller = new TaskController();
 
 /**
  * Apply authentication middleware to all Task routes.
- * 
+ *
  * All requests to /tasks endpoints must include a valid JWT in the Authorization header.
  * This ensures that only authenticated users can create, view, update, or delete tasks.
  */
-router.use(authMiddleware)
+router.use(authMiddleware);
 
 /**
  * Create a new task
@@ -46,7 +46,7 @@ router.use(authMiddleware)
  *   }
  * }
  */
-router.post('/', (req, res) => controller.createTask(req, res));
+router.post("/", (req, res) => controller.createTask(req, res));
 
 /**
  * Get a task by ID
@@ -66,7 +66,7 @@ router.post('/', (req, res) => controller.createTask(req, res));
  *   }
  * }
  */
-router.get('/:id', (req, res) => controller.findById(req, res));
+router.get("/:id", (req, res) => controller.findById(req, res));
 
 /**
  * Get all tasks for a specific user
@@ -94,7 +94,7 @@ router.get('/:id', (req, res) => controller.findById(req, res));
  *   }
  * ]
  */
-router.get('/user/:email', (req, res) => controller.findAllByUser(req, res));
+router.get("/user/:email", (req, res) => controller.findAllByUser(req, res));
 
 /**
  * Update a task by ID
@@ -122,7 +122,7 @@ router.get('/user/:email', (req, res) => controller.findAllByUser(req, res));
  *   }
  * }
  */
-router.put('/:id', (req, res) => controller.updateTask(req, res));
+router.put("/:id", (req, res) => controller.updateTask(req, res));
 
 /**
  * Delete a task by ID
@@ -134,6 +134,6 @@ router.put('/:id', (req, res) => controller.updateTask(req, res));
  *   "message": "Task deleted successfully"
  * }
  */
-router.delete('/:id', (req, res) => controller.deleteTask(req, res));
+router.delete("/:id", (req, res) => controller.deleteTask(req, res));
 
 export default router;
