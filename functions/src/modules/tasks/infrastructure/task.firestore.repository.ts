@@ -35,6 +35,7 @@ export class TaskFirestoreRepository implements ITaskRepository {
         description: data.description ?? "",
         completed: data.completed ?? false,
         completedAt: data.completedAt ?? null,
+        id: doc.id
       });
     });
 
@@ -62,6 +63,7 @@ export class TaskFirestoreRepository implements ITaskRepository {
       description: data.description ?? "",
       completed: data.completed ?? false,
       completedAt: data.completedAt ?? null,
+      id: id
     });
   }
 

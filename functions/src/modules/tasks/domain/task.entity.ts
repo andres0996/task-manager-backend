@@ -32,12 +32,15 @@ export class Task {
     description?: string;
     completed?: boolean;
     completedAt?: Date | null;
+    createdAt?: Date;
+    id?:string
   }) {
     this.userEmail = data.userEmail;
     this.title = data.title;
     this.description = data.description ?? "";
     this.completed = data.completed ?? false;
     this.completedAt = data.completedAt ?? null;
-    this.createdAt = new Date();
+    this.createdAt = data.createdAt ?? new Date();
+    this.id = data.id
   }
 }
