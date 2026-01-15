@@ -37,7 +37,44 @@ The system is built with Express and TypeScript, uses Firebase Firestore as the 
 
 ## Project Architecture
 
-This section will be updated with a detailed explanation of the system architecture, including folder structure, separation of concerns, and applied design patterns.
+This project follows **Clean Architecture**, **Hexagonal Architecture**, and **Domain-Driven Design (DDD)** principles, ensuring separation of concerns, scalability, and testability.
+
+### Layer Mapping to Architectures
+
+```
+| Clean Architecture       | Hexagonal / Ports & Adapters   | Your structure                |
+|--------------------------|------------------------------- |-------------------------------|
+| Entities                 | Domain Core                    | `domain/`                     |
+| Use Cases                | Use Cases                      | `application/`                |
+| Interface Adapters (HTTP)| Adapters (HTTP)                | `presentation/`               |
+| Infrastructure (DB, etc) | Adapters (DB)                  | `infrastructure/`             |
+```
+
+This separation demonstrates:
+
+-  Proper **responsibility segregation**  
+-  **Dependency inversion** (core does not depend on frameworks)  
+-  Application of **SOLID principles**  
+-  Scalable, maintainable system design  
+-  Clear distinction between **business logic** and **frameworks**
+
+### Data Transfer Objects (DTOs)
+
+DTOs define how data enters and exits the system.
+
+- `CreateTaskDTO`  
+- `UpdateTaskDTO`  
+- `LoginDTO`  
+
+### Custom Errors
+
+All business-specific or domain-specific errors are defined in `shared/errors/`.  
+
+**Benefits:**
+
+- Centralized error handling  
+- Consistent API responses  
+- Easier debugging and maintenance 
 
 ## Installation
 
@@ -46,8 +83,8 @@ Follow these steps to run the project locally:
 ### 1. Clone the repository
 
     ```bash
-    git clone https://github.com/andres0996/task-manager-frontend.git
-    cd task-manager-frontend
+    git clone https://github.com/andres0996/task-manager-backend.git
+    cd task-manager-backend
     ```
 
 ### 2. Install dependencies
@@ -64,16 +101,34 @@ Follow these steps to run the project locally:
   FIREBASE_PRIVATE_KEY=your-firebase-private-key
   ```
 
+### 4. Run the backend locally
+
+  ```bash
+   firebase emulators:start --only functions
+  ```
+
+### 5. Access the deployed backend
+
+The backend is already deployed on **Firebase Cloud Functions**
+You can call the endpoints directly using the deployed url
+
+Base URL:
+
+[https://us-central1-task-manager-app-79f86.cloudfunctions.net/api/v1](https://us-central1-task-manager-app-79f86.cloudfunctions.net/api/v1)
+
 ## API Endpoints
 
 The backend exposes the following RESTful endpoints:
 
-- `GET /tasks?userId=` - Retrieve all tasks for a specific user
-- `POST /tasks` - Create a new task
+- `GET /tasks/user/:email` Retrieve all tasks for a specific user by their email.
+- `GET /tasks/:id` Retrieve a task by ID.
+- `POST /tasks`  - Create a new task
 - `PUT /tasks/:id` - Update a task
 - `DELETE /tasks/:id` - Delete a task
-- `GET /users?email=` - Check if user exists
+
 - `POST /users` - Create a new user
+
+- `POST /auth` - Log in user
 
 ## Design Decisions
 
@@ -85,12 +140,12 @@ The backend exposes the following RESTful endpoints:
    - **Infrastructure:** Concrete database implementations (Firestore repositories).  
    This separation ensures that **the core domain is independent** from frameworks and external services.
 
-### 2. Hexagonal Architecture (Ports & Adapters)**  
+### 2. Hexagonal Architecture (Ports & Adapters) 
    - All external dependencies enter or leave the system through **adapters**.  
    - The **domain layer** does not depend on Express or Firebase.  
    - Database access is done through **repository adapters** in the infrastructure layer, allowing easy replacement of Firestore if needed.  
 
-### 3. Domain-Driven Design (DDD)**  
+### 3. Domain-Driven Design (DDD) 
    - The project is organized around the **domain**, reflecting real business concepts.  
    - Each module (users, tasks) includes:  
      - **Entities** representing core business objects.  
@@ -99,23 +154,23 @@ The backend exposes the following RESTful endpoints:
      - **Presentation** for HTTP adapters (controllers & routes).  
    - This ensures that **business rules are centralized and independent** from delivery mechanisms.
 
-### 4. Separation of Concerns**  
+### 4. Separation of Concerns
    - Each layer has a **single responsibility**, making the codebase easier to maintain and test.  
    - Controllers handle **HTTP concerns**, services handle **business logic**, and repositories handle **data persistence**.
 
-### 5. Testability**  
+### 5. Testability 
    - Using repository interfaces allows **mocking dependencies** during unit tests.  
    - The domain and application layers are decoupled from Express and Firestore, allowing **fast and isolated tests**.  
 
-### 6. Scalability & Maintainability**  
+### 6. Scalability & Maintainability  
    - Feature-based module structure (`modules/users`, `modules/tasks`) supports **easy extension** with new features.  
    - Adding new entities or modules requires minimal changes to existing code.  
 
-### 7. Error Handling & Middleware**  
+### 7. Error Handling & Middleware 
    - Centralized **error middleware** ensures consistent HTTP responses for exceptions.  
    - DTOs (Data Transfer Objects) are used to validate and structure incoming and outgoing data.
 
-### 8. Future-Proof Design**  
+### 8. Future-Proof Design
    - This architecture allows for:  
      - Replacing Firestore with another database  
      - Adding new delivery mechanisms (GraphQL, gRPC) without changing domain logic  
